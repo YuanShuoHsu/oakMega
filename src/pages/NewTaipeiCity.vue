@@ -4,7 +4,6 @@
         <transition-group name="hamburger" appear>
             <CityMenuToggle
                 v-show="!hamburger"
-                @click="toggleHamburger"
                 key="1"
             />
             <CityMenu
@@ -629,9 +628,6 @@ export default {
                     .join("")
             );
             return JSON.parse(jsonPayload);
-        },
-        toggleHamburger() {
-            this.$store.commit("cityAbout/ANTIHAMBURGER", this.hamburger);
         },
     },
 };
