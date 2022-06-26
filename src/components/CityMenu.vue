@@ -1,5 +1,5 @@
 <template>
-    <div v-show="hamburger && !isLoading" key="2" class="mapList">
+    <div class="mapList">
         <CityMenuHeader />
         <CityMenuList
             :stopPullUpLoad="stopPullUpLoad"
@@ -12,8 +12,6 @@
 import CityMenuHeader from "./../components/CityMenuHeader";
 import CityMenuList from "./../components/CityMenuList";
 
-import { mapState } from "vuex";
-
 export default {
     name: "CityMenu",
     components: {
@@ -21,9 +19,6 @@ export default {
         CityMenuList,
     },
     props: ["stopPullUpLoad", "stopLocation"],
-    computed: {
-        ...mapState("cityAbout", ["isLoading", "hamburger"]),
-    },
 };
 </script>
 

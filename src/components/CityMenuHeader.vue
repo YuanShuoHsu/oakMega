@@ -37,12 +37,17 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
     name: "CityMenuHeader",
     data() {
         return {
             changeKeyWord: "",
         };
+    },
+    computed: {
+        ...mapState("cityAbout", ["hamburger"]),
     },
     watch: {
         changeKeyWord(value) {

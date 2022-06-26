@@ -2,8 +2,13 @@
     <div class="newTaipeiCity">
         <CityMapLoading />
         <transition-group name="hamburger" appear>
-            <CityMenuToggle key="1" />
+            <CityMenuToggle
+                v-show="!hamburger"
+                @click="toggleHamburger"
+                key="1"
+            />
             <CityMenu
+                v-show="hamburger && !isLoading"
                 key="2"
                 :stopPullUpLoad="stopPullUpLoad"
                 :stopLocation="stopLocation"
@@ -625,6 +630,9 @@ export default {
             );
             return JSON.parse(jsonPayload);
         },
+        toggleHamburger() {
+            this.$store.commit("cityAbout/ANTIHAMBURGER", this.hamburger);
+        },
     },
 };
 </script>
@@ -709,7 +717,6 @@ export default {
             user-select: none;
         }
     }
-
     .hamburger-enter-active,
     .hamburger-leave-active {
         transition: 0.2s;
