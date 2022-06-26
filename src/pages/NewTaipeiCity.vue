@@ -138,7 +138,6 @@ export default {
     mounted() {
         this.initLeaflet();
         this.initAxios();
-        console.log("ok");
     },
     methods: {
         initLeaflet() {
