@@ -3,13 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --https --port 8080",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "animate.css": "^4.1.1",
+    "autoprefixer": "10.4.5",
+    "axios": "^0.27.2",
+    "better-scroll": "^2.4.2",
     "core-js": "^3.8.3",
-    "vue": "^2.6.14"
+    "leaflet": "^1.8.0",
+    "leaflet-control-geocoder": "^2.4.0",
+    "leaflet-providers": "github:leaflet-extras/leaflet-providers",
+    "leaflet.browser.print": "^2.0.2",
+    "leaflet.fullscreen": "^2.4.0",
+    "leaflet.locatecontrol": "^0.76.1",
+    "leaflet.markercluster": "^1.5.3",
+    "normalize.css": "^8.0.1",
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.4",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -19,7 +33,10 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "vue-template-compiler": "^2.6.14"
+    "sass": "^1.52.3",
+    "sass-loader": "^13.0.0",
+    "vue-template-compiler": "^2.6.14",
+    "webpack": "^5.73.0"
   },
   "eslintConfig": {
     "root": true,
