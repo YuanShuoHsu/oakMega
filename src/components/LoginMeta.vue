@@ -18,6 +18,16 @@
 <script>
 export default {
     name: "LoginMeta",
+    data() {
+        return {
+            txtHeader: {
+                typ: "JWT",
+                alg: "HS256",
+            },
+            txtPayload: null,
+            txtSecret: "facebookToken",
+        };
+    },
     mounted() {
         this.initMeta();
     },
@@ -35,7 +45,6 @@ export default {
         checkLoginState() {
             window.FB.getLoginStatus((response) => {
                 this.statusChangeCallback(response);
-                console.log(response);
             });
         },
         statusChangeCallback(response) {
@@ -44,11 +53,33 @@ export default {
                     "/me?fields=name,email,picture{url}",
                     (response) => {
                         response.picture = response.picture.data.url;
-                        console.log(response);
+
+                        this.txtPayload = JSON.parse(JSON.stringify(response));
+                        localStorage.setItem("token", this.createJWT());
+                        this.$router.push({ path: "/newTaipeiCity" });
                     }
                 );
-                // this.$router.push({ path: "/newTaipeiCity" });
             }
+        },
+        getBase64Encoded(rawStr) {
+            let wordArray = window.CryptoJS.enc.Utf8.parse(rawStr);
+            let result = window.CryptoJS.enc.Base64.stringify(wordArray);
+            return result;
+        },
+        createJWT() {
+            let base64Header = this.getBase64Encoded(
+                JSON.stringify(this.txtHeader)
+            );
+            let base64Payload = this.getBase64Encoded(
+                JSON.stringify(this.txtPayload)
+            );
+            let signature = window.CryptoJS.HmacSHA256(
+                base64Header + "." + base64Payload,
+                this.txtSecret
+            );
+            let base64sign = window.CryptoJS.enc.Base64.stringify(signature);
+            let jwt = base64Header + "." + base64Payload + "." + base64sign;
+            return jwt;
         },
     },
 };

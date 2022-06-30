@@ -10,6 +10,11 @@
 		<%= htmlWebpackPlugin.options.title %>
 	</title>
 	<script src="./javascript/client.js" async defer></script>
+
+	<script src="./javascript/core.js"></script>
+	<script src="./javascript/enc-base64.js"></script>
+	<script src="./javascript/hmac.js"></script>
+	<script src="./javascript/sha256.js"></script>
 </head>
 
 <body>
@@ -32,10 +37,8 @@
 		})(document, "script", "facebook-jssdk");
 	</script>
 
-	<script async defer crossorigin="anonymous"
-		src="./javascript/sdkCustom.js"
-		nonce="qaPjh0Lg"></script>
-		
+	<script async defer crossorigin="anonymous" src="./javascript/sdkCustom.js" nonce="qaPjh0Lg"></script>
+
 	<div id="app"></div>
 	<!-- built files will be auto injected -->
 </body>

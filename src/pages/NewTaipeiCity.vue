@@ -277,7 +277,6 @@ export default {
                         e.stopPropagation();
                         text.style.opacity = "0";
                         localStorage.removeItem("token");
-                        localStorage.removeItem("fblst_5383669928358992");
                         vm.$router.push({ path: "/" });
                     };
 
