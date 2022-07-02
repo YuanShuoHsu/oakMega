@@ -15,6 +15,9 @@ const cityOption = {
     namespaced: true,
     actions: {},
     mutations: {
+        FIRSTTRUE(state) {
+            state.isFirst = true;
+        },
         FIRSTFALSE(state) {
             state.isFirst = false;
         },

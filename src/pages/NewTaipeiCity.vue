@@ -237,6 +237,7 @@ export default {
                         e.stopPropagation();
                         text.style.opacity = "0";
                         localStorage.removeItem("token");
+                        vm.$store.commit("cityAbout/FIRSTTRUE");
                         vm.$router.push({ path: "/" });
                     };
 
