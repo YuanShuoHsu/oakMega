@@ -11,7 +11,6 @@
 
 <script>
 import axios from "axios";
-import BetterScroll from "better-scroll";
 import "animate.css";
 
 import L from "leaflet";
@@ -68,10 +67,10 @@ export default {
             stopData: 20,
             states: [],
 
-            bscroll: null,
+            // bscroll: null,
             geoJSON: null,
-            markerClusterGroup: null,
-            circles: null,
+            // markerClusterGroup: null,
+            // circles: null,
             layers: null,
         };
     },
@@ -85,11 +84,14 @@ export default {
             "hamburger",
             "keyWord",
             "stopPullUpLoad",
+            "bscroll",
             "map",
             "markers",
             "openStreetMap",
             "stadiaAlidadeSmoothDark",
             "stadiaAlidadeSmooth",
+            "markerClusterGroup",
+            "circles"
         ]),
     },
     watch: {
@@ -277,9 +279,9 @@ export default {
         postPolygon() {
             return axios.post(this.url, this.polygon);
         },
-        async initAxios() {
-            await this.initLeaflet();
+        initAxios() {
             if (this.isFirst === true) {
+                this.initLeaflet();
                 this.$store.commit("cityAbout/FIRSTFALSE");
                 this.$store.commit("cityAbout/LOADINGTRUE");
                 this.$store.commit("cityAbout/NONEMESSAGE");
@@ -342,9 +344,10 @@ export default {
                 });
         },
         initPosition() {
-            this.markerClusterGroup = L.markerClusterGroup();
+            this.$store.commit("cityAbout/MARKERCLUSTERGROUP");
             this.$store.commit("cityAbout/MARKERS");
-            this.circles = L.featureGroup();
+            this.$store.commit("cityAbout/CIRCLES");
+
             this.filterStop.forEach((currentValue) => {
                 const { stop_name, latitude, longitude, distance, id, radius } =
                     currentValue;
@@ -363,6 +366,7 @@ export default {
             this.map.addLayer(this.circles);
         },
         initPolygon() {
+            // this.$store.commit("cityAbout/GEOJSON");
             this.geoJSON = L.geoJSON(this.states, {
                 style() {
                     return { color: "#2d044d" };
@@ -401,67 +405,8 @@ export default {
                 .addTo(this.map);
         },
         initBscroll() {
-            this.bscroll = new BetterScroll(".betterList", {
-                startX: 0,
-                startY: 0,
-                scrollX: false,
-                scrollY: true,
-                freeScroll: false,
-                directionLockThreshold: 5,
-                eventPassthrough: "",
-                click: true,
-                dblclick: {
-                    delay: 300,
-                },
-                tap: "",
-                bounce: {
-                    top: true,
-                    bottom: true,
-                    left: true,
-                    right: true,
-                },
-                bounceTime: 800,
-                momentum: true,
-                momentumLimitTime: 300,
-                momentumLimitDistance: 15,
-                swipeTime: 2500,
-                swipeBounceTime: 500,
-                deceleration: 0.0015,
-                flickLimitTime: 200,
-                flickLimitDistance: 100,
-                resizePolling: 60,
-                probeType: 1,
-                preventDefault: true,
-                preventDefaultException: {
-                    tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO)$/,
-                },
-                tagException: { tagName: /^TEXTAREA$/ },
-                HWCompositing: true,
-                useTransition: true,
-                bindToWrapper: false,
-                disableMouse: false,
-                disableTouch: false,
-                autoBlur: true,
-                stopPropagation: false,
-                bindToTarget: false,
-                autoEndDistance: 5,
-                outOfBoundaryDampingFactor: 1 / 3,
-                specifiedIndexAsContent: 0,
-                quadrant: 1,
-                mouseWheel: true,
-                pullDownRefresh: {
-                    threshold: 20,
-                    stop: 0,
-                },
-                pullUpLoad: {
-                    threshold: 20,
-                },
-                scrollbar: {
-                    fade: true,
-                    interactive: false,
-                    scrollbarTrackClickable: true,
-                },
-            });
+            this.$store.commit("cityAbout/BSCROLL");
+
             this.bscroll.on("pullingUp", this.pullingUpHandler);
             this.bscroll.on("pullingDown", this.pullingDownHandler);
         },
