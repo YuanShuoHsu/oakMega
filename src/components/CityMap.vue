@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!isLoading" id="map"></div>
+    <div v-show="!isLoading" class="map"></div>
 </template>
 
 <script>
@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#map {
+.map {
     position: absolute;
     top: 0;
     left: 0;

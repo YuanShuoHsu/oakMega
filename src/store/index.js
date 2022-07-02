@@ -123,8 +123,8 @@ const cityOption = {
                 },
             });
         },
-        MAP(state) {
-            state.map = L.map("map", {
+        MAP(state, value) {
+            state.map = L.map(value, {
                 zoomControl: false,
                 zoomSnap: 0.2,
                 zoomDelta: 1,

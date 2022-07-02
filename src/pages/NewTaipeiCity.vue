@@ -5,7 +5,7 @@
             <CityMenuToggle v-show="!hamburger" key="1" />
             <CityMenu v-show="hamburger && !isLoading" key="2" />
         </transition-group>
-        <CityMap />
+        <CityMap ref="mapId" />
     </div>
 </template>
 
@@ -67,10 +67,7 @@ export default {
             stopData: 20,
             states: [],
 
-            // bscroll: null,
             geoJSON: null,
-            // markerClusterGroup: null,
-            // circles: null,
             layers: null,
         };
     },
@@ -132,144 +129,142 @@ export default {
     methods: {
         initLeaflet() {
             if (this.isFirst === true) {
+                delete L.Icon.Default.prototype._getIconUrl;
+                L.Icon.Default.mergeOptions({
+                    iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+                    iconUrl: require("leaflet/dist/images/marker-icon.png"),
+                    shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+                });
+                this.$store.commit("cityAbout/MAP", this.$refs.mapId.$el);
+                this.$store.commit("cityAbout/OPENSTREETMAP");
+                this.$store.commit("cityAbout/STADIAALIDADESMOOTHDARK");
+                this.$store.commit("cityAbout/STADIAALIDADESMOOTH");
 
-            
-            delete L.Icon.Default.prototype._getIconUrl;
-            L.Icon.Default.mergeOptions({
-                iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-                iconUrl: require("leaflet/dist/images/marker-icon.png"),
-                shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
-            });
+                L.control
+                    .zoom({
+                        position: "bottomright",
+                    })
+                    .addTo(this.map);
 
-            this.$store.commit("cityAbout/MAP");
-            this.$store.commit("cityAbout/OPENSTREETMAP");
-            this.$store.commit("cityAbout/STADIAALIDADESMOOTHDARK");
-            this.$store.commit("cityAbout/STADIAALIDADESMOOTH");
-
-            L.control
-                .zoom({
-                    position: "bottomright",
-                })
-                .addTo(this.map);
-
-            L.control
-                .locate({
-                    position: "bottomright",
-                    strings: {
-                        popup: `<h2>${this.parseJwt().name}</h2>
+                L.control
+                    .locate({
+                        position: "bottomright",
+                        strings: {
+                            popup: `<h2>${this.parseJwt().name}</h2>
                         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
                             <img style="width: 80px; height: 80px; border-radius: 4px" src=${
                                 this.parseJwt().picture
                             }></img>
                             <p>${this.parseJwt().email}</p>
                         </div>`,
-                    },
-                })
-                .addTo(this.map);
+                        },
+                    })
+                    .addTo(this.map);
 
-            L.Control.geocoder({
-                position: "bottomright",
-            }).addTo(this.map);
-
-            L.control
-                .browserPrint({
+                L.Control.geocoder({
                     position: "bottomright",
-                    title: "Print map",
-                    printModes: ["Portrait", "Landscape", "Auto"],
-                })
-                .addTo(this.map);
+                }).addTo(this.map);
 
-            const vm = this;
-            L.Control.Logout = L.Control.extend({
-                onAdd() {
-                    let container = L.DomUtil.create("div");
-                    let img = L.DomUtil.create("img");
-                    let text = L.DomUtil.create("div");
+                L.control
+                    .browserPrint({
+                        position: "bottomright",
+                        title: "Print map",
+                        printModes: ["Portrait", "Landscape", "Auto"],
+                    })
+                    .addTo(this.map);
 
-                    container.style.width = "44px";
-                    container.style.height = "44px";
-                    container.style.display = "flex";
-                    container.style.justifyContent = "center";
-                    container.style.alignItems = "center";
-                    container.style.pointerEvents = "none";
+                const vm = this;
+                L.Control.Logout = L.Control.extend({
+                    onAdd() {
+                        let container = L.DomUtil.create("div");
+                        let img = L.DomUtil.create("img");
+                        let text = L.DomUtil.create("div");
 
-                    img.style.position = "absolute";
-                    img.src = `${vm.parseJwt().picture}`;
-                    img.style.width = "36x";
-                    img.style.height = "36px";
-                    img.style.border = "2px solid rgba(0, 0, 0, 0.5)";
-                    img.style.borderRadius = "50%";
-                    img.style.background = "#fefefe";
-                    img.style.cursor = "pointer";
-                    img.style.pointerEvents = "auto";
+                        container.style.width = "44px";
+                        container.style.height = "44px";
+                        container.style.display = "flex";
+                        container.style.justifyContent = "center";
+                        container.style.alignItems = "center";
+                        container.style.pointerEvents = "none";
 
-                    text.innerHTML = "登出";
-                    text.style.position = "absolute";
-                    text.style.width = "36px";
-                    text.style.lineHeight = "36px";
-                    text.style.borderRadius = "50%";
-                    text.style.background = "rgba(254, 254, 254, 0.8)";
-                    text.style.fontSize = "16px";
-                    text.style.fontWeight = "800";
-                    text.style.textAlign = "center";
-                    text.style.opacity = "0";
-                    text.style.pointerEvents = "none";
-                    text.style.transition = "0.2s";
+                        img.style.position = "absolute";
+                        img.src = `${vm.parseJwt().picture}`;
+                        img.style.width = "36x";
+                        img.style.height = "36px";
+                        img.style.border = "2px solid rgba(0, 0, 0, 0.5)";
+                        img.style.borderRadius = "50%";
+                        img.style.background = "#fefefe";
+                        img.style.cursor = "pointer";
+                        img.style.pointerEvents = "auto";
 
-                    img.onmouseenter = (e) => {
-                        e.stopPropagation();
-                        text.style.opacity = "1";
-                    };
-                    img.onmouseleave = (e) => {
-                        e.stopPropagation();
+                        text.innerHTML = "登出";
+                        text.style.position = "absolute";
+                        text.style.width = "36px";
+                        text.style.lineHeight = "36px";
+                        text.style.borderRadius = "50%";
+                        text.style.background = "rgba(254, 254, 254, 0.8)";
+                        text.style.fontSize = "16px";
+                        text.style.fontWeight = "800";
+                        text.style.textAlign = "center";
                         text.style.opacity = "0";
-                    };
-                    img.ontouchstart = (e) => {
-                        e.stopPropagation();
-                        text.style.opacity = "1";
-                    };
+                        text.style.pointerEvents = "none";
+                        text.style.transition = "0.2s";
 
-                    img.ontouchend = (e) => {
-                        e.stopPropagation();
-                        text.style.opacity = "0";
-                    };
-                    img.ondblclick = (e) => {
-                        e.stopPropagation();
-                    };
-                    img.onclick = (e) => {
-                        e.stopPropagation();
-                        text.style.opacity = "0";
+                        img.onmouseenter = (e) => {
+                            e.stopPropagation();
+                            text.style.opacity = "1";
+                        };
+                        img.onmouseleave = (e) => {
+                            e.stopPropagation();
+                            text.style.opacity = "0";
+                        };
+                        img.ontouchstart = (e) => {
+                            e.stopPropagation();
+                            text.style.opacity = "1";
+                        };
 
-                        localStorage.removeItem("token");
+                        img.ontouchend = (e) => {
+                            e.stopPropagation();
+                            text.style.opacity = "0";
+                        };
+                        img.ondblclick = (e) => {
+                            e.stopPropagation();
+                        };
+                        img.onclick = (e) => {
+                            e.stopPropagation();
+                            text.style.opacity = "0";
 
-                        vm.$store.commit("cityAbout/FIRSTTRUE");
-                        vm.$store.commit("cityAbout/LOADINGTRUE");
-                        vm.$store.commit("cityAbout/NONEMESSAGE");
-                        vm.stop = [];
-                        vm.stopOrigin = [];
-                        vm.$store.commit("cityAbout/STOPPULLUPLOAD");
-                        vm.states = [];
+                            localStorage.removeItem("token");
 
-                        vm.$router.push({ path: "/" });
-                    };
+                            vm.$store.commit("cityAbout/FIRSTTRUE");
+                            vm.$store.commit("cityAbout/LOADINGTRUE");
+                            vm.$store.commit("cityAbout/NONEMESSAGE");
+                            vm.stop = [];
+                            vm.stopOrigin = [];
+                            vm.$store.commit("cityAbout/STOPPULLUPLOAD");
+                            vm.states = [];
 
-                    container.appendChild(img);
-                    container.appendChild(text);
+                            vm.$router.push({ path: "/" });
+                        };
 
-                    return container;
-                },
-            });
-            L.control.Logout = (options) => {
-                return new L.Control.Logout(options);
-            };
-            L.control.Logout({ position: "topright" }).addTo(this.map);
+                        container.appendChild(img);
+                        container.appendChild(text);
 
-            L.control
-                .scale({
-                    position: "bottomleft",
-                })
-                .addTo(this.map);
+                        return container;
+                    },
+                });
+                L.control.Logout = (options) => {
+                    return new L.Control.Logout(options);
+                };
+                L.control.Logout({ position: "topright" }).addTo(this.map);
+
+                L.control
+                    .scale({
+                        position: "bottomleft",
+                    })
+                    .addTo(this.map);
             }
+
             let popup = L.popup();
             let LatLng = this.map;
             function onMapClick(e) {
