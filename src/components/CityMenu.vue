@@ -1,10 +1,7 @@
 <template>
     <div class="mapList">
         <CityMenuHeader />
-        <CityMenuList
-            :stopPullUpLoad="stopPullUpLoad"
-            :stopLocation="stopLocation"
-        />
+        <CityMenuList />
     </div>
 </template>
 
@@ -18,7 +15,6 @@ export default {
         CityMenuHeader,
         CityMenuList,
     },
-    props: ["stopPullUpLoad", "stopLocation"],
 };
 </script>
 

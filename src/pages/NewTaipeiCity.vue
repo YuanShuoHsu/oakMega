@@ -2,16 +2,8 @@
     <div class="newTaipeiCity">
         <CityMapLoading />
         <transition-group name="hamburger" appear>
-            <CityMenuToggle
-                v-show="!hamburger"
-                key="1"
-            />
-            <CityMenu
-                v-show="hamburger && !isLoading"
-                key="2"
-                :stopPullUpLoad="stopPullUpLoad"
-                :stopLocation="stopLocation"
-            />
+            <CityMenuToggle v-show="!hamburger" key="1" />
+            <CityMenu v-show="hamburger && !isLoading" key="2" />
         </transition-group>
         <CityMap />
     </div>
@@ -71,17 +63,14 @@ export default {
             },
 
             stop: [],
-            stopPullUpLoad: [],
             stopData: 20,
             states: [],
 
             bscroll: null,
-            map: null,
             openStreetMap: null,
             stadiaAlidadeSmoothDark: null,
             stadiaAlidadeSmooth: null,
             geoJSON: null,
-            markers: null,
             markerClusterGroup: null,
             circles: null,
             layers: null,
@@ -99,6 +88,9 @@ export default {
             "errorMessage",
             "hamburger",
             "keyWord",
+            "stopPullUpLoad",
+            "map",
+            "markers",
         ]),
     },
     watch: {
@@ -112,22 +104,16 @@ export default {
                     return stop.stop_name.indexOf(value) !== -1;
                 });
                 this.stop = JSON.parse(JSON.stringify(this.filterStop));
-                this.stopPullUpLoad = [];
+                this.$store.commit("cityAbout/STOPPULLUPLOAD");
                 for (let index = 0; index < this.stopData; index++) {
                     if (this.stop.length === 0) {
-                        this.$store.commit(
-                            "cityAbout/FINISHEDLOADING",
-                            this.pullUpMessage
-                        );
+                        this.$store.commit("cityAbout/FINISHEDLOADING");
                         break;
                     } else if (
                         this.stop.length !== 0 &&
                         this.pullUpMessage !== "加載中..."
                     ) {
-                        this.$store.commit(
-                            "cityAbout/LOADING",
-                            this.pullUpMessage
-                        );
+                        this.$store.commit("cityAbout/LOADING");
                     }
                     this.stopPullUpLoad.push(this.stop.shift());
                 }
@@ -152,15 +138,7 @@ export default {
                 shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
             });
 
-            this.map = L.map("map", {
-                zoomControl: false,
-                zoomSnap: 0.2,
-                zoomDelta: 1,
-                fullscreenControl: true,
-                fullscreenControlOptions: {
-                    position: "bottomright",
-                },
-            }).setView([this.position.lat, this.position.lng], 11);
+            this.$store.commit("cityAbout/MAP");
 
             this.openStreetMap = L.tileLayer(
                 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -315,7 +293,7 @@ export default {
         },
         initPosition() {
             this.markerClusterGroup = L.markerClusterGroup();
-            this.markers = L.featureGroup();
+            this.$store.commit("cityAbout/MARKERS");
             this.circles = L.featureGroup();
             this.filterStop.forEach((currentValue) => {
                 const { stop_name, latitude, longitude, distance, id, radius } =
@@ -372,17 +350,6 @@ export default {
                 .layers(baseMaps, overlayMaps)
                 .addTo(this.map);
         },
-        stopLocation(latitude, longitude) {
-            this.map.setView([latitude, longitude], 19);
-            for (var key in this.markers._layers) {
-                if (
-                    this.markers._layers[key]._latlng.lat === latitude &&
-                    this.markers._layers[key]._latlng.lng === longitude
-                ) {
-                    this.markers._layers[key].openPopup();
-                }
-            }
-        },
         postPosition() {
             return axios.post(this.url, this.position);
         },
@@ -391,12 +358,12 @@ export default {
         },
         initAxios() {
             if (this.isFirst === true) {
-                this.$store.commit("cityAbout/FIRSTFALSE", this.isFirst);
-                this.$store.commit("cityAbout/LOADINGTRUE", this.isLoading);
-                this.$store.commit("cityAbout/NONEMESSAGE", this.errorMessage);
+                this.$store.commit("cityAbout/FIRSTFALSE");
+                this.$store.commit("cityAbout/LOADINGTRUE");
+                this.$store.commit("cityAbout/NONEMESSAGE");
                 this.stop = [];
                 this.stopOrigin = [];
-                this.stopPullUpLoad = [];
+                this.$store.commit("cityAbout/STOPPULLUPLOAD");
                 this.states = [];
             }
             axios
@@ -404,14 +371,8 @@ export default {
                 .then(
                     axios.spread((position, polygon) => {
                         // console.log(position, polygon);
-                        this.$store.commit(
-                            "cityAbout/NONEKEYWORD",
-                            this.keyWord
-                        );
-                        this.$store.commit(
-                            "cityAbout/LOADINGFALSE",
-                            this.isLoading
-                        );
+                        this.$store.commit("cityAbout/NONEKEYWORD");
+                        this.$store.commit("cityAbout/LOADINGFALSE");
 
                         const positionDataSortResult =
                             position.data.result.sort((a, b) => {
@@ -426,24 +387,18 @@ export default {
                             JSON.stringify(positionDataSortResult)
                         );
 
-                        this.stopPullUpLoad = [];
+                        this.$store.commit("cityAbout/STOPPULLUPLOAD");
                         this.states = polygon.data.result.features;
 
                         for (let index = 0; index < this.stopData; index++) {
                             if (this.stop.length === 0) {
-                                this.$store.commit(
-                                    "cityAbout/FINISHEDLOADING",
-                                    this.pullUpMessage
-                                );
+                                this.$store.commit("cityAbout/FINISHEDLOADING");
                                 break;
                             } else if (
                                 this.stop.length !== 0 &&
                                 this.pullUpMessage !== "加載中..."
                             ) {
-                                this.$store.commit(
-                                    "cityAbout/LOADING",
-                                    this.pullUpMessage
-                                );
+                                this.$store.commit("cityAbout/LOADING");
                             }
                             this.stopPullUpLoad.push(this.stop.shift());
                         }
@@ -456,11 +411,11 @@ export default {
                     })
                 )
                 .catch((error) => {
-                    this.$store.commit("cityAbout/LOADINGTRUE", this.isLoading);
+                    this.$store.commit("cityAbout/LOADINGTRUE");
                     this.$store.commit("cityAbout/ERRORMESSAGE", error.message);
                     this.stop = [];
                     this.stopOrigin = [];
-                    this.stopPullUpLoad = [];
+                    this.$store.commit("cityAbout/STOPPULLUPLOAD");
                     this.status = [];
                 });
         },
@@ -531,17 +486,14 @@ export default {
         },
 
         async pullingDownHandler() {
-            this.$store.commit("cityAbout/REFRESHING", this.pullDownMessage);
+            this.$store.commit("cityAbout/REFRESHING");
             await this.requestDownData();
             this.finishPullDown();
         },
         async finishPullDown() {
             this.bscroll.finishPullDown();
             setTimeout(() => {
-                this.$store.commit(
-                    "cityAbout/NONEREFRESHING",
-                    this.pullDownMessage
-                );
+                this.$store.commit("cityAbout/NONEREFRESHING");
                 this.bscroll.refresh();
             }, 1000);
         },
@@ -557,10 +509,7 @@ export default {
                 this.initAxios();
                 await this.awaitDownSetTimeout();
 
-                this.$store.commit(
-                    "cityAbout/REFRESHSUCCESSFULLY",
-                    this.pullDownMessage
-                );
+                this.$store.commit("cityAbout/REFRESHSUCCESSFULLY");
             } catch (error) {
                 // console.log(error);
             }
@@ -583,19 +532,13 @@ export default {
                 await this.awaitUpSetTimeout();
                 for (let index = 0; index < this.stopData; index++) {
                     if (this.stop.length === 0) {
-                        this.$store.commit(
-                            "cityAbout/FINISHEDLOADING",
-                            this.pullUpMessage
-                        );
+                        this.$store.commit("cityAbout/FINISHEDLOADING");
                         break;
                     } else if (
                         this.stop.length !== 0 &&
                         this.pullUpMessage !== "加載中..."
                     ) {
-                        this.$store.commit(
-                            "cityAbout/LOADING",
-                            this.pullUpMessage
-                        );
+                        this.$store.commit("cityAbout/LOADING");
                     }
                     this.stopPullUpLoad.push(this.stop.shift());
                 }

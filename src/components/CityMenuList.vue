@@ -6,7 +6,6 @@
                 v-for="stopObj in stopPullUpLoad"
                 :key="stopObj.id"
                 :stopObj="stopObj"
-                :stopLocation="stopLocation"
             />
             <span>{{ pullUpMessage }}</span>
         </ul>
@@ -21,9 +20,12 @@ import { mapState } from "vuex";
 export default {
     name: "CityMenuList",
     components: { CityMenuListItem },
-    props: ["stopPullUpLoad", "stopLocation"],
     computed: {
-        ...mapState("cityAbout", ["pullDownMessage", "pullUpMessage"]),
+        ...mapState("cityAbout", [
+            "pullDownMessage",
+            "pullUpMessage",
+            "stopPullUpLoad",
+        ]),
     },
 };
 </script>

@@ -31,9 +31,27 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
     name: "newTaipeiCityItem",
-    props: ["stopObj","stopLocation"],
+    props: ["stopObj"],
+    computed: {
+        ...mapState("cityAbout", ["map", "markers"]),
+    },
+    methods: {
+        stopLocation(latitude, longitude) {
+            this.map.setView([latitude, longitude], 19);
+            for (var key in this.markers._layers) {
+                if (
+                    this.markers._layers[key]._latlng.lat === latitude &&
+                    this.markers._layers[key]._latlng.lng === longitude
+                ) {
+                    this.markers._layers[key].openPopup();
+                }
+            }
+        },
+    },
 };
 </script>
 
