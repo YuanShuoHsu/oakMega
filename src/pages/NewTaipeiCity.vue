@@ -125,7 +125,6 @@ export default {
         },
     },
     mounted() {
-        this.initLeaflet();
         this.initAxios();
     },
     methods: {
@@ -272,72 +271,14 @@ export default {
             }
             LatLng.on("click", onMapClick);
         },
-        initPosition() {
-            this.markerClusterGroup = L.markerClusterGroup();
-            this.$store.commit("cityAbout/MARKERS");
-            this.circles = L.featureGroup();
-            this.filterStop.forEach((currentValue) => {
-                const { stop_name, latitude, longitude, distance, id, radius } =
-                    currentValue;
-                L.marker([latitude, longitude])
-                    .bindPopup(
-                        `<h2>${stop_name}</h2><p>經緯度<strong>（${latitude}, ${longitude}）</strong></p><p>距離地點<strong>（${distance}）</strong></p><p>地點 ID<strong>（${id}）</strong></p>`
-                    )
-                    .addTo(this.markers);
-                L.circle([latitude, longitude], {
-                    radius,
-                    opacity: 0.2,
-                }).addTo(this.circles);
-            });
-            this.markers.addTo(this.markerClusterGroup);
-            this.map.addLayer(this.markerClusterGroup);
-            this.map.addLayer(this.circles);
-        },
-        initPolygon() {
-            this.geoJSON = L.geoJSON(this.states, {
-                style() {
-                    return { color: "#2d044d" };
-                },
-                onEachFeature(feature, layer) {
-                    layer.bindPopup(
-                        `<h2>${
-                            feature.properties["分區"]
-                        }</h2><p>容積<strong>（${feature.properties.SHAPE_Area.toFixed(
-                            6
-                        ).toString()}）</strong></p>`
-                    );
-                    layer.bindTooltip(feature.properties.TxtMemo, {
-                        direction: "center",
-                        permanent: false,
-                        sticky: true,
-                        offset: [12, -12],
-                        opacity: 0.8,
-                    });
-                },
-            });
-            this.map.addLayer(this.geoJSON);
-        },
-        initLayer() {
-            var baseMaps = {
-                "Open Street Map": this.openStreetMap,
-                "Stadia.AlidadeSmoothDark": this.stadiaAlidadeSmoothDark,
-                "Stadia Alidade Smooth": this.stadiaAlidadeSmooth,
-            };
-            var overlayMaps = {
-                Circles: this.circles,
-                Polygon: this.geoJSON,
-            };
-            this.layers = L.control
-                .layers(baseMaps, overlayMaps)
-                .addTo(this.map);
-        },
         postPosition() {
             return axios.post(this.url, this.position);
         },
         postPolygon() {
             return axios.post(this.url, this.polygon);
         },
-        initAxios() {
+        async initAxios() {
+            await this.initLeaflet();
             if (this.isFirst === true) {
                 this.$store.commit("cityAbout/FIRSTFALSE");
                 this.$store.commit("cityAbout/LOADINGTRUE");
@@ -399,6 +340,65 @@ export default {
                     this.$store.commit("cityAbout/STOPPULLUPLOAD");
                     this.status = [];
                 });
+        },
+        initPosition() {
+            this.markerClusterGroup = L.markerClusterGroup();
+            this.$store.commit("cityAbout/MARKERS");
+            this.circles = L.featureGroup();
+            this.filterStop.forEach((currentValue) => {
+                const { stop_name, latitude, longitude, distance, id, radius } =
+                    currentValue;
+                L.marker([latitude, longitude])
+                    .bindPopup(
+                        `<h2>${stop_name}</h2><p>經緯度<strong>（${latitude}, ${longitude}）</strong></p><p>距離地點<strong>（${distance}）</strong></p><p>地點 ID<strong>（${id}）</strong></p>`
+                    )
+                    .addTo(this.markers);
+                L.circle([latitude, longitude], {
+                    radius,
+                    opacity: 0.2,
+                }).addTo(this.circles);
+            });
+            this.markers.addTo(this.markerClusterGroup);
+            this.map.addLayer(this.markerClusterGroup);
+            this.map.addLayer(this.circles);
+        },
+        initPolygon() {
+            this.geoJSON = L.geoJSON(this.states, {
+                style() {
+                    return { color: "#2d044d" };
+                },
+                onEachFeature(feature, layer) {
+                    layer.bindPopup(
+                        `<h2>${
+                            feature.properties["分區"]
+                        }</h2><p>容積<strong>（${feature.properties.SHAPE_Area.toFixed(
+                            6
+                        ).toString()}）</strong></p>`
+                    );
+                    layer.bindTooltip(feature.properties.TxtMemo, {
+                        direction: "center",
+                        permanent: false,
+                        sticky: true,
+                        offset: [12, -12],
+                        opacity: 0.8,
+                    });
+                },
+            });
+            this.map.addLayer(this.geoJSON);
+        },
+        initLayer() {
+            var baseMaps = {
+                "Open Street Map": this.openStreetMap,
+                "Stadia.AlidadeSmoothDark": this.stadiaAlidadeSmoothDark,
+                "Stadia Alidade Smooth": this.stadiaAlidadeSmooth,
+            };
+            var overlayMaps = {
+                Circles: this.circles,
+                Polygon: this.geoJSON,
+            };
+            this.layers = L.control
+                .layers(baseMaps, overlayMaps)
+                .addTo(this.map);
         },
         initBscroll() {
             this.bscroll = new BetterScroll(".betterList", {
