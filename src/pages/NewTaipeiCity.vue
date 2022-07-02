@@ -91,7 +91,7 @@ export default {
             "stadiaAlidadeSmoothDark",
             "stadiaAlidadeSmooth",
             "markerClusterGroup",
-            "circles"
+            "circles",
         ]),
     },
     watch: {
@@ -131,6 +131,9 @@ export default {
     },
     methods: {
         initLeaflet() {
+            if (this.isFirst === true) {
+
+            
             delete L.Icon.Default.prototype._getIconUrl;
             L.Icon.Default.mergeOptions({
                 iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -236,8 +239,17 @@ export default {
                     img.onclick = (e) => {
                         e.stopPropagation();
                         text.style.opacity = "0";
+
                         localStorage.removeItem("token");
+
                         vm.$store.commit("cityAbout/FIRSTTRUE");
+                        vm.$store.commit("cityAbout/LOADINGTRUE");
+                        vm.$store.commit("cityAbout/NONEMESSAGE");
+                        vm.stop = [];
+                        vm.stopOrigin = [];
+                        vm.$store.commit("cityAbout/STOPPULLUPLOAD");
+                        vm.states = [];
+
                         vm.$router.push({ path: "/" });
                     };
 
@@ -257,7 +269,7 @@ export default {
                     position: "bottomleft",
                 })
                 .addTo(this.map);
-
+            }
             let popup = L.popup();
             let LatLng = this.map;
             function onMapClick(e) {
@@ -280,9 +292,9 @@ export default {
         postPolygon() {
             return axios.post(this.url, this.polygon);
         },
-        initAxios() {
+        async initAxios() {
+            await this.initLeaflet();
             if (this.isFirst === true) {
-                this.initLeaflet();
                 this.$store.commit("cityAbout/FIRSTFALSE");
                 this.$store.commit("cityAbout/LOADINGTRUE");
                 this.$store.commit("cityAbout/NONEMESSAGE");
@@ -411,7 +423,6 @@ export default {
             this.bscroll.on("pullingUp", this.pullingUpHandler);
             this.bscroll.on("pullingDown", this.pullingDownHandler);
         },
-
         async pullingDownHandler() {
             this.$store.commit("cityAbout/REFRESHING");
             await this.requestDownData();
@@ -448,7 +459,6 @@ export default {
                 }, 1000);
             });
         },
-
         async pullingUpHandler() {
             await this.requestUpData();
             this.bscroll.finishPullUp();
