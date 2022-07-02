@@ -69,6 +69,30 @@ const cityOption = {
         },
         MARKERS(state) {
             state.markers = L.featureGroup();
+        },
+        OPENSTREETMAP(state) {
+            state.openStreetMap = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    minZoom: 8,
+                    maxZoom: 19,
+                }
+            ).addTo(state.map);
+        },
+        STADIAALIDADESMOOTHDARK(state) {
+            state.stadiaAlidadeSmoothDark = L.tileLayer.provider(
+                "Stadia.AlidadeSmoothDark",
+                {
+                    minZoom: 8,
+                    maxZoom: 19,
+                }
+            );
+        },
+        STADIAALIDADESMOOTH(state) {
+            state.stadiaAlidadeSmooth = L.tileLayer.provider(
+                "Stadia.AlidadeSmooth",
+                { minZoom: 8, maxZoom: 19 }
+            );
         }
     },
     state: {
@@ -84,6 +108,9 @@ const cityOption = {
 
         map: null,
         markers: null,
+        openStreetMap: null,
+        stadiaAlidadeSmoothDark: null,
+        stadiaAlidadeSmooth: null,
     },
     getters: {}
 }

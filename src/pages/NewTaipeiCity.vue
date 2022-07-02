@@ -63,20 +63,16 @@ export default {
             },
 
             stop: [],
+            stopOrigin: [],
+            filterStop: [],
             stopData: 20,
             states: [],
 
             bscroll: null,
-            openStreetMap: null,
-            stadiaAlidadeSmoothDark: null,
-            stadiaAlidadeSmooth: null,
             geoJSON: null,
             markerClusterGroup: null,
             circles: null,
             layers: null,
-
-            stopOrigin: [],
-            filterStop: [],
         };
     },
     computed: {
@@ -91,6 +87,9 @@ export default {
             "stopPullUpLoad",
             "map",
             "markers",
+            "openStreetMap",
+            "stadiaAlidadeSmoothDark",
+            "stadiaAlidadeSmooth",
         ]),
     },
     watch: {
@@ -139,27 +138,9 @@ export default {
             });
 
             this.$store.commit("cityAbout/MAP");
-
-            this.openStreetMap = L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {
-                    minZoom: 8,
-                    maxZoom: 19,
-                }
-            ).addTo(this.map);
-
-            this.stadiaAlidadeSmoothDark = L.tileLayer.provider(
-                "Stadia.AlidadeSmoothDark",
-                {
-                    minZoom: 8,
-                    maxZoom: 19,
-                }
-            );
-
-            this.stadiaAlidadeSmooth = L.tileLayer.provider(
-                "Stadia.AlidadeSmooth",
-                { minZoom: 8, maxZoom: 19 }
-            );
+            this.$store.commit("cityAbout/OPENSTREETMAP");
+            this.$store.commit("cityAbout/STADIAALIDADESMOOTHDARK");
+            this.$store.commit("cityAbout/STADIAALIDADESMOOTH");
 
             L.control
                 .zoom({
