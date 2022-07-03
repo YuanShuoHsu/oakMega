@@ -27,20 +27,20 @@ const cityOption = {
         LOADINGFALSE(state) {
             state.isLoading = false;
         },
-        REFRESHING(state) {
-            state.pullDownMessage = "正在刷新中...";
-        },
         NONEREFRESHING(state) {
             state.pullDownMessage = "";
+        },
+        REFRESHING(state) {
+            state.pullDownMessage = "正在刷新中...";
         },
         REFRESHSUCCESSFULLY(state) {
             state.pullDownMessage = "刷新成功";
         },
-        FINISHEDLOADING(state) {
-            state.pullUpMessage = "全加載完";
-        },
-        LOADING(state) {
+        PULLUPMESSAGE(state) {
             state.pullUpMessage = "加載中...";
+        },
+        FINISHEDPULLUPMESSAGE(state) {
+            state.pullUpMessage = "全加載完";
         },
         NONEMESSAGE(state) {
             state.errorMessage = "";
@@ -50,6 +50,9 @@ const cityOption = {
         },
         ANTIHAMBURGER(state, value) {
             state.hamburger = !value;
+        },
+        HAMBURGER(state) {
+            state.hamburger = true;
         },
         NONEKEYWORD(state) {
             state.keyWord = "";
@@ -211,7 +214,6 @@ const cityOption = {
         // geoJSON: null,
         markerClusterGroup: null,
         circles: null,
-
     },
     getters: {}
 }

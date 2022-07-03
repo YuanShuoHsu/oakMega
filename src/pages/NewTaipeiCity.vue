@@ -105,13 +105,13 @@ export default {
                 this.$store.commit("cityAbout/STOPPULLUPLOAD");
                 for (let index = 0; index < this.stopData; index++) {
                     if (this.stop.length === 0) {
-                        this.$store.commit("cityAbout/FINISHEDLOADING");
+                        this.$store.commit("cityAbout/FINISHEDPULLUPMESSAGE");
                         break;
                     } else if (
                         this.stop.length !== 0 &&
                         this.pullUpMessage !== "加載中..."
                     ) {
-                        this.$store.commit("cityAbout/LOADING");
+                        this.$store.commit("cityAbout/PULLUPMESSAGE");
                     }
                     this.stopPullUpLoad.push(this.stop.shift());
                 }
@@ -130,11 +130,13 @@ export default {
         initLeaflet() {
             if (this.isFirst === true) {
                 delete L.Icon.Default.prototype._getIconUrl;
+
                 L.Icon.Default.mergeOptions({
                     iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
                     iconUrl: require("leaflet/dist/images/marker-icon.png"),
                     shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
                 });
+
                 this.$store.commit("cityAbout/MAP", this.$refs.mapId.$el);
                 this.$store.commit("cityAbout/OPENSTREETMAP");
                 this.$store.commit("cityAbout/STADIAALIDADESMOOTHDARK");
@@ -232,13 +234,16 @@ export default {
                         };
                         img.onclick = (e) => {
                             e.stopPropagation();
-                            text.style.opacity = "0";
 
                             localStorage.removeItem("token");
 
                             vm.$store.commit("cityAbout/FIRSTTRUE");
-                            vm.$store.commit("cityAbout/LOADINGTRUE");
+                            vm.$store.commit("cityAbout/LOADINGFALSE");
+                            vm.$store.commit("cityAbout/NONEREFRESHING");
+                            vm.$store.commit("cityAbout/PULLUPMESSAGE");
                             vm.$store.commit("cityAbout/NONEMESSAGE");
+                            vm.$store.commit("cityAbout/NONEKEYWORD");
+                            vm.$store.commit("cityAbout/HAMBURGER");
                             vm.stop = [];
                             vm.stopOrigin = [];
                             vm.$store.commit("cityAbout/STOPPULLUPLOAD");
@@ -324,13 +329,15 @@ export default {
 
                         for (let index = 0; index < this.stopData; index++) {
                             if (this.stop.length === 0) {
-                                this.$store.commit("cityAbout/FINISHEDLOADING");
+                                this.$store.commit(
+                                    "cityAbout/FINISHEDPULLUPMESSAGE"
+                                );
                                 break;
                             } else if (
                                 this.stop.length !== 0 &&
                                 this.pullUpMessage !== "加載中..."
                             ) {
-                                this.$store.commit("cityAbout/LOADING");
+                                this.$store.commit("cityAbout/PULLUPMESSAGE");
                             }
                             this.stopPullUpLoad.push(this.stop.shift());
                         }
@@ -464,13 +471,13 @@ export default {
                 await this.awaitUpSetTimeout();
                 for (let index = 0; index < this.stopData; index++) {
                     if (this.stop.length === 0) {
-                        this.$store.commit("cityAbout/FINISHEDLOADING");
+                        this.$store.commit("cityAbout/FINISHEDPULLUPMESSAGE");
                         break;
                     } else if (
                         this.stop.length !== 0 &&
                         this.pullUpMessage !== "加載中..."
                     ) {
-                        this.$store.commit("cityAbout/LOADING");
+                        this.$store.commit("cityAbout/PULLUPMESSAGE");
                     }
                     this.stopPullUpLoad.push(this.stop.shift());
                 }
