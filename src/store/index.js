@@ -60,8 +60,29 @@ const cityOption = {
         EDITKEYWORD(state, value) {
             state.keyWord = value;
         },
+        STOP(state) {
+            state.stop = [];
+        },
+        STOPDATA(state, value) {
+            state.stop = value;
+        },
+        STOPORIGIN(state) {
+            state.stopOrigin = [];
+        },
+        STOPORIGINDATA(state, value) {
+            state.stopOrigin = value;
+        },
+        FILTERSTOP(state, value) {
+            state.filterStop = value;
+        },
         STOPPULLUPLOAD(state) {
             state.stopPullUpLoad = [];
+        },
+        STATES(state) {
+            state.states = [];
+        },
+        STATESDATA(state, value) {
+            state.states = value;
         },
         BSCROLL(state) {
             state.bscroll = new BetterScroll(".betterList", {
@@ -169,30 +190,13 @@ const cityOption = {
         },
         MARKERCLUSTERGROUP(state) {
             state.markerClusterGroup = L.markerClusterGroup();
+        },
+        GEOJSON(state, value) {
+            state.geoJSON = value
+        },
+        LAYERS(state, value) {
+            state.layers = value;
         }
-
-        // GEOJSON(state) {
-        //     state.geoJSON = L.geoJSON(this.states, {
-        //         style() {
-        //             return { color: "#2d044d" };
-        //         },
-        //         onEachFeature(feature, layer) {
-        //             layer.bindPopup(
-        //                 `<h2>${feature.properties["分區"]
-        //                 }</h2><p>容積<strong>（${feature.properties.SHAPE_Area.toFixed(
-        //                     6
-        //                 ).toString()}）</strong></p>`
-        //             );
-        //             layer.bindTooltip(feature.properties.TxtMemo, {
-        //                 direction: "center",
-        //                 permanent: false,
-        //                 sticky: true,
-        //                 offset: [12, -12],
-        //                 opacity: 0.8,
-        //             });
-        //         },
-        //     });
-        // }
     },
     state: {
         isFirst: true,
@@ -203,7 +207,12 @@ const cityOption = {
         hamburger: true,
         keyWord: "",
 
+        stop: [],
+        stopOrigin: [],
+        filterStop: [],
         stopPullUpLoad: [],
+        stopData: 20,
+        states: [],
 
         bscroll: null,
         map: null,
@@ -214,6 +223,9 @@ const cityOption = {
         // geoJSON: null,
         markerClusterGroup: null,
         circles: null,
+
+        geoJSON: null,
+        layers: null,
     },
     getters: {}
 }

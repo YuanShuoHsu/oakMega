@@ -34,7 +34,7 @@ export default {
     methods: {
         initMeta() {
             window.FB.init({
-                appId: "5383669928358992",
+                appId: "1085732649020412",
                 cookie: true,
                 xfbml: true,
                 version: "v14.0",

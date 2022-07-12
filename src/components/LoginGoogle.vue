@@ -12,7 +12,7 @@ export default {
         initGoogle() {
             window.google.accounts.id.initialize({
                 client_id:
-                    "248599475462-d4qe5vcckbi7j3oilm0flhns92sonsg5.apps.googleusercontent.com",
+                    "266526655758-dqfkv8305d2bgbrmo7ijlnnu6484ciqq.apps.googleusercontent.com",
                 callback: this.handleCredentialResponse,
             });
             window.google.accounts.id.renderButton(

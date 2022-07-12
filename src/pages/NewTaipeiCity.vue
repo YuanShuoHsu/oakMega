@@ -23,8 +23,6 @@ import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-import "leaflet.browser.print/dist/leaflet.browser.print.min.js";
-
 import "leaflet-control-geocoder/dist/Control.Geocoder.min.js";
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 
@@ -49,27 +47,7 @@ export default {
         CityMap,
     },
     data() {
-        return {
-            url: "https://asia-east2-botfat.cloudfunctions.net/project_controller",
-            position: {
-                lng: 121.504603,
-                lat: 24.993955,
-                function: "xinbei_distance",
-            },
-            polygon: {
-                directory: "tucheng.json",
-                function: "xinbei_json",
-            },
-
-            stop: [],
-            stopOrigin: [],
-            filterStop: [],
-            stopData: 20,
-            states: [],
-
-            geoJSON: null,
-            layers: null,
-        };
+        return {};
     },
     computed: {
         ...mapState("cityAbout", [
@@ -80,7 +58,12 @@ export default {
             "errorMessage",
             "hamburger",
             "keyWord",
+            "stop",
+            "stopOrigin",
+            "filterStop",
             "stopPullUpLoad",
+            "stopData",
+            "states",
             "bscroll",
             "map",
             "markers",
@@ -89,6 +72,8 @@ export default {
             "stadiaAlidadeSmooth",
             "markerClusterGroup",
             "circles",
+            "geoJSON",
+            "layers",
         ]),
     },
     watch: {
@@ -98,10 +83,16 @@ export default {
                 setTimeout(() => {
                     this.bscroll.refresh();
                 }, 0);
-                this.filterStop = this.stopOrigin.filter((stop) => {
-                    return stop.stop_name.indexOf(value) !== -1;
-                });
-                this.stop = JSON.parse(JSON.stringify(this.filterStop));
+                this.$store.commit(
+                    "cityAbout/FILTERSTOP",
+                    this.stopOrigin.filter((stop) => {
+                        return stop.stop_name.indexOf(value) !== -1;
+                    })
+                );
+                this.$store.commit(
+                    "cityAbout/STOPDATA",
+                    JSON.parse(JSON.stringify(this.filterStop))
+                );
                 this.$store.commit("cityAbout/STOPPULLUPLOAD");
                 for (let index = 0; index < this.stopData; index++) {
                     if (this.stop.length === 0) {
@@ -166,14 +157,6 @@ export default {
                 L.Control.geocoder({
                     position: "bottomright",
                 }).addTo(this.map);
-
-                L.control
-                    .browserPrint({
-                        position: "bottomright",
-                        title: "Print map",
-                        printModes: ["Portrait", "Landscape", "Auto"],
-                    })
-                    .addTo(this.map);
 
                 const vm = this;
                 L.Control.Logout = L.Control.extend({
@@ -244,10 +227,10 @@ export default {
                             vm.$store.commit("cityAbout/NONEMESSAGE");
                             vm.$store.commit("cityAbout/NONEKEYWORD");
                             vm.$store.commit("cityAbout/HAMBURGER");
-                            vm.stop = [];
-                            vm.stopOrigin = [];
+                            vm.$store.commit("cityAbout/STOP");
+                            vm.$store.commit("cityAbout/STOPORIGIN");
                             vm.$store.commit("cityAbout/STOPPULLUPLOAD");
-                            vm.states = [];
+                            vm.$store.commit("cityAbout/STATES");
 
                             vm.$router.push({ path: "/" });
                         };
@@ -287,10 +270,10 @@ export default {
             LatLng.on("click", onMapClick);
         },
         postPosition() {
-            return axios.post(this.url, this.position);
+            return axios.get("./json/position.json");
         },
         postPolygon() {
-            return axios.post(this.url, this.polygon);
+            return axios.get("./json/polygon.json");
         },
         async initAxios() {
             await this.initLeaflet();
@@ -298,34 +281,42 @@ export default {
                 this.$store.commit("cityAbout/FIRSTFALSE");
                 this.$store.commit("cityAbout/LOADINGTRUE");
                 this.$store.commit("cityAbout/NONEMESSAGE");
-                this.stop = [];
-                this.stopOrigin = [];
+                this.$store.commit("cityAbout/STOP");
+                this.$store.commit("cityAbout/NONEMESSAGE");
+                this.$store.commit("cityAbout/STOPORIGIN");
                 this.$store.commit("cityAbout/STOPPULLUPLOAD");
-                this.states = [];
+                this.$store.commit("cityAbout/STATES");
             }
             axios
                 .all([this.postPosition(), this.postPolygon()])
                 .then(
                     axios.spread((position, polygon) => {
-                        // console.log(position, polygon);
+                        // console.log(position.data, polygon.data);
                         this.$store.commit("cityAbout/NONEKEYWORD");
                         this.$store.commit("cityAbout/LOADINGFALSE");
 
                         const positionDataSortResult =
-                            position.data.result.sort((a, b) => {
+                            position.data.data.result.sort((a, b) => {
                                 return a.id - b.id;
                             });
 
-                        this.stopOrigin = JSON.parse(
-                            JSON.stringify(positionDataSortResult)
+                        this.$store.commit(
+                            "cityAbout/STOPORIGINDATA",
+                            JSON.parse(JSON.stringify(positionDataSortResult))
                         );
-                        this.filterStop = this.stopOrigin;
-                        this.stop = JSON.parse(
-                            JSON.stringify(positionDataSortResult)
+                        this.$store.commit(
+                            "cityAbout/FILTERSTOP",
+                            this.stopOrigin
                         );
-
+                        this.$store.commit(
+                            "cityAbout/STOPDATA",
+                            JSON.parse(JSON.stringify(positionDataSortResult))
+                        );
                         this.$store.commit("cityAbout/STOPPULLUPLOAD");
-                        this.states = polygon.data.result.features;
+                        this.$store.commit(
+                            "cityAbout/STATESDATA",
+                            polygon.data.data.result.features
+                        );
 
                         for (let index = 0; index < this.stopData; index++) {
                             if (this.stop.length === 0) {
@@ -352,8 +343,8 @@ export default {
                 .catch((error) => {
                     this.$store.commit("cityAbout/LOADINGTRUE");
                     this.$store.commit("cityAbout/ERRORMESSAGE", error.message);
-                    this.stop = [];
-                    this.stopOrigin = [];
+                    this.$store.commit("cityAbout/STOP");
+                    this.$store.commit("cityAbout/STOPORIGIN");
                     this.$store.commit("cityAbout/STOPPULLUPLOAD");
                     this.status = [];
                 });
@@ -381,28 +372,51 @@ export default {
             this.map.addLayer(this.circles);
         },
         initPolygon() {
-            // this.$store.commit("cityAbout/GEOJSON");
-            this.geoJSON = L.geoJSON(this.states, {
-                style() {
-                    return { color: "#2d044d" };
-                },
-                onEachFeature(feature, layer) {
-                    layer.bindPopup(
-                        `<h2>${
-                            feature.properties["分區"]
-                        }</h2><p>容積<strong>（${feature.properties.SHAPE_Area.toFixed(
-                            6
-                        ).toString()}）</strong></p>`
-                    );
-                    layer.bindTooltip(feature.properties.TxtMemo, {
-                        direction: "center",
-                        permanent: false,
-                        sticky: true,
-                        offset: [12, -12],
-                        opacity: 0.8,
-                    });
-                },
-            });
+            this.$store.commit(
+                "cityAbout/GEOJSON",
+                L.geoJSON(this.states, {
+                    style() {
+                        return { color: "#2d044d" };
+                    },
+                    onEachFeature(feature, layer) {
+                        layer.bindPopup(
+                            `<h2>${
+                                feature.properties["分區"]
+                            }</h2><p>容積<strong>（${feature.properties.SHAPE_Area.toFixed(
+                                6
+                            ).toString()}）</strong></p>`
+                        );
+                        layer.bindTooltip(feature.properties.TxtMemo, {
+                            direction: "center",
+                            permanent: false,
+                            sticky: true,
+                            offset: [12, -12],
+                            opacity: 0.8,
+                        });
+                    },
+                })
+            );
+            // this.geoJSON = L.geoJSON(this.states, {
+            //     style() {
+            //         return { color: "#2d044d" };
+            //     },
+            //     onEachFeature(feature, layer) {
+            //         layer.bindPopup(
+            //             `<h2>${
+            //                 feature.properties["分區"]
+            //             }</h2><p>容積<strong>（${feature.properties.SHAPE_Area.toFixed(
+            //                 6
+            //             ).toString()}）</strong></p>`
+            //         );
+            //         layer.bindTooltip(feature.properties.TxtMemo, {
+            //             direction: "center",
+            //             permanent: false,
+            //             sticky: true,
+            //             offset: [12, -12],
+            //             opacity: 0.8,
+            //         });
+            //     },
+            // });
             this.map.addLayer(this.geoJSON);
         },
         initLayer() {
@@ -415,9 +429,10 @@ export default {
                 Circles: this.circles,
                 Polygon: this.geoJSON,
             };
-            this.layers = L.control
-                .layers(baseMaps, overlayMaps)
-                .addTo(this.map);
+            this.$store.commit(
+                "cityAbout/LAYERS",
+                L.control.layers(baseMaps, overlayMaps).addTo(this.map)
+            );
         },
         initBscroll() {
             this.$store.commit("cityAbout/BSCROLL");
