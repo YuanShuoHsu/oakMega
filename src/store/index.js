@@ -340,8 +340,6 @@ const cityOption = {
         initLayer(context) {
             var baseMaps = {
                 "Open Street Map": context.state.openStreetMap,
-                // "Stadia.AlidadeSmoothDark": context.state.stadiaAlidadeSmoothDark,
-                // "Stadia Alidade Smooth": context.state.stadiaAlidadeSmooth,
             };
             var overlayMaps = {
                 Circles: context.state.circles,
@@ -582,24 +580,6 @@ const cityOption = {
                 }
             ).addTo(state.map);
         },
-        // STADIAALIDADESMOOTHDARK(state) {
-        //     state.stadiaAlidadeSmoothDark = L.tileLayer(
-        //         'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
-        //         {
-        //             minZoom: 8,
-        //             maxZoom: 19
-        //         }
-        //     );
-        // },
-        // STADIAALIDADESMOOTH(state) {
-        //     state.stadiaAlidadeSmooth = L.tileLayer(
-        //         'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
-        //         {
-        //             minZoom: 8,
-        //             maxZoom: 19
-        //         }
-        //     );
-        // },
         CIRCLES(state) {
             state.circles = L.featureGroup();
         },
@@ -633,8 +613,6 @@ const cityOption = {
         map: null,
         markers: null,
         openStreetMap: null,
-        // stadiaAlidadeSmoothDark: null,
-        // stadiaAlidadeSmooth: null,
         markerClusterGroup: null,
         circles: null,
 
