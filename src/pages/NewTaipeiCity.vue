@@ -344,7 +344,7 @@ export default {
                     this.$store.commit("cityAbout/STOP");
                     this.$store.commit("cityAbout/STOPORIGIN");
                     this.$store.commit("cityAbout/STOPPULLUPLOAD");
-                    this.status = [];
+                    this.$store.commit("cityAbout/STATES");
                 });
         },
         initPosition() {
