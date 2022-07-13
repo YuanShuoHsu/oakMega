@@ -171,17 +171,17 @@ const cityOption = {
             ).addTo(state.map);
         },
         STADIAALIDADESMOOTHDARK(state) {
-            state.stadiaAlidadeSmoothDark = L.tileLayer.provider(
-                "Stadia.AlidadeSmoothDark",
+            state.stadiaAlidadeSmoothDark = L.tileLayer(
+                'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
                 {
                     minZoom: 8,
-                    maxZoom: 19,
+                    maxZoom: 19
                 }
             );
         },
         STADIAALIDADESMOOTH(state) {
-            state.stadiaAlidadeSmooth = L.tileLayer.provider(
-                "Stadia.AlidadeSmooth",
+            state.stadiaAlidadeSmooth = L.tileLayer(
+                'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
                 { minZoom: 8, maxZoom: 19 }
             );
         },

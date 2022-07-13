@@ -100,9 +100,9 @@ export default {
         }
     }
     .cityAreaContainer {
+        padding: 0 0 7.5px 0;
         width: 100%;
         border-bottom: 1px solid #e7d5c7;
-        padding: 0 0 7.5px 0;
         .cityArea {
             height: 40px;
             display: flex;

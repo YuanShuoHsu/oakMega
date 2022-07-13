@@ -29,8 +29,6 @@ import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.js";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 
-import "leaflet-providers";
-
 import CityMapLoading from "./../components/CityMapLoading";
 import CityMenuToggle from "./../components/CityMenuToggle";
 import CityMenu from "./../components/CityMenu";
@@ -396,27 +394,6 @@ export default {
                     },
                 })
             );
-            // this.geoJSON = L.geoJSON(this.states, {
-            //     style() {
-            //         return { color: "#2d044d" };
-            //     },
-            //     onEachFeature(feature, layer) {
-            //         layer.bindPopup(
-            //             `<h2>${
-            //                 feature.properties["分區"]
-            //             }</h2><p>容積<strong>（${feature.properties.SHAPE_Area.toFixed(
-            //                 6
-            //             ).toString()}）</strong></p>`
-            //         );
-            //         layer.bindTooltip(feature.properties.TxtMemo, {
-            //             direction: "center",
-            //             permanent: false,
-            //             sticky: true,
-            //             offset: [12, -12],
-            //             opacity: 0.8,
-            //         });
-            //     },
-            // });
             this.map.addLayer(this.geoJSON);
         },
         initLayer() {
