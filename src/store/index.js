@@ -182,7 +182,10 @@ const cityOption = {
         STADIAALIDADESMOOTH(state) {
             state.stadiaAlidadeSmooth = L.tileLayer(
                 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
-                { minZoom: 8, maxZoom: 19 }
+                {
+                    minZoom: 8,
+                    maxZoom: 19
+                }
             );
         },
         CIRCLES(state) {

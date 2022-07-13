@@ -66,8 +66,8 @@ export default {
             "map",
             "markers",
             "openStreetMap",
-            "stadiaAlidadeSmoothDark",
-            "stadiaAlidadeSmooth",
+            // "stadiaAlidadeSmoothDark",
+            // "stadiaAlidadeSmooth",
             "markerClusterGroup",
             "circles",
             "geoJSON",
@@ -128,8 +128,8 @@ export default {
 
                 this.$store.commit("cityAbout/MAP", this.$refs.mapId.$el);
                 this.$store.commit("cityAbout/OPENSTREETMAP");
-                this.$store.commit("cityAbout/STADIAALIDADESMOOTHDARK");
-                this.$store.commit("cityAbout/STADIAALIDADESMOOTH");
+                // this.$store.commit("cityAbout/STADIAALIDADESMOOTHDARK");
+                // this.$store.commit("cityAbout/STADIAALIDADESMOOTH");
 
                 L.control
                     .zoom({
@@ -399,8 +399,8 @@ export default {
         initLayer() {
             var baseMaps = {
                 "Open Street Map": this.openStreetMap,
-                "Stadia.AlidadeSmoothDark": this.stadiaAlidadeSmoothDark,
-                "Stadia Alidade Smooth": this.stadiaAlidadeSmooth,
+                // "Stadia.AlidadeSmoothDark": this.stadiaAlidadeSmoothDark,
+                // "Stadia Alidade Smooth": this.stadiaAlidadeSmooth,
             };
             var overlayMaps = {
                 Circles: this.circles,
