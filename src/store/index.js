@@ -320,7 +320,7 @@ const cityOption = {
                             direction: "center",
                             permanent: false,
                             sticky: true,
-                            offset: [12, -12],
+                            offset: [-30, 30],
                             opacity: 0.8,
                         });
                     },
