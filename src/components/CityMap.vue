@@ -20,7 +20,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100vh;
-    user-select: none;
     z-index: -1;
+    user-select: none;
 }
 </style>

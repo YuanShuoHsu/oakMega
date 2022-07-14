@@ -4,18 +4,15 @@ import Vuex from 'vuex'
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import "leaflet.fullscreen";
-import "leaflet.fullscreen/Control.FullScreen.css";
-
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-import "leaflet-control-geocoder/dist/Control.Geocoder.min.js";
-import "leaflet-control-geocoder/dist/Control.Geocoder.css";
-
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.js";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
+
+import "leaflet.fullscreen";
+import "leaflet.fullscreen/Control.FullScreen.css";
 
 import axios from "axios";
 import BetterScroll from "better-scroll";
@@ -67,8 +64,6 @@ const cityOption = {
 
                 context.commit("MAP", value);
                 context.commit("OPENSTREETMAP");
-                // context.commit("STADIAALIDADESMOOTHDARK");
-                // context.commit("STADIAALIDADESMOOTH");
 
                 L.control
                     .zoom({
@@ -91,10 +86,6 @@ const cityOption = {
                         })
                         .addTo(context.state.map);
                 });
-
-                L.Control.geocoder({
-                    position: "bottomright",
-                }).addTo(context.state.map);
 
                 await context.dispatch("parseJwt").then((response) => {
                     L.Control.Logout = L.Control.extend({
