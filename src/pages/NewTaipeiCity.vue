@@ -80,9 +80,9 @@ export default {
                 }
                 this.markerClusterGroup.removeLayer(this.markers);
                 this.map.removeLayer(this.circles);
-                this.initPosition();
+                this.$store.dispatch("cityAbout/initPosition");
                 this.layers.remove();
-                this.initLayer();
+                this.$store.dispatch("cityAbout/initLayer");
             }
         },
     },
