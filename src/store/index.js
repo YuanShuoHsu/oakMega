@@ -367,6 +367,7 @@ const cityOption = {
                 context.state.markerClusterGroup.removeLayer(context.state.markers);
                 context.state.map.removeLayer(context.state.circles);
                 context.state.layers.remove();
+                context.commit("KEYWORDEMPTYTRUE");
 
                 context.dispatch("initAxios");
                 await context.dispatch("awaitDownSetTimeout");
@@ -460,6 +461,12 @@ const cityOption = {
         },
         EDITKEYWORD(state, value) {
             state.keyWord = value;
+        },
+        KEYWORDEMPTYTRUE(state) {
+            state.keyWordEmpty = true;
+        },
+        KEYWORDEMPTYFALSE(state) {
+            state.keyWordEmpty = false;
         },
         STOP(state) {
             state.stop = [];
@@ -592,6 +599,7 @@ const cityOption = {
         errorMessage: "",
         hamburger: true,
         keyWord: "",
+        keyWordEmpty: false,
 
         stop: [],
         stopOrigin: [],

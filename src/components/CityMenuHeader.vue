@@ -24,7 +24,7 @@
             <div class="cityArea">
                 <label for="selectArea">地點</label>
                 <input
-                    v-model.lazy="keyWord"
+                    v-model.lazy.trim="keyWords"
                     type="text"
                     name="selectArea"
                     id="selectArea"
@@ -41,16 +41,22 @@ import { mapState } from "vuex";
 
 export default {
     name: "CityMenuHeader",
+    data() {
+        return {
+            keyWords: "",
+        };
+    },
     computed: {
-        keyWord: {
-            get() {
-                return this.$store.state.keyWord;
-            },
-            set(value) {
-                this.$store.commit("cityAbout/EDITKEYWORD", value);
-            },
+        ...mapState("cityAbout", ["hamburger", "keyWordEmpty"]),
+    },
+    watch: {
+        keyWords(value) {
+            this.$store.commit("cityAbout/EDITKEYWORD", value);
         },
-        ...mapState("cityAbout", ["hamburger"]),
+        keyWordEmpty() {
+            this.keyWords = "";
+            this.$store.commit("cityAbout/KEYWORDEMPTYFALSE");
+        },
     },
     methods: {
         toggleHamburger() {
