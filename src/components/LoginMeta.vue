@@ -28,7 +28,7 @@ export default {
             txtSecret: "facebookToken",
         };
     },
-    mounted() {
+    created() {
         this.initMeta();
     },
     methods: {
