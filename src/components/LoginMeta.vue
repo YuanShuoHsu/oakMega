@@ -31,16 +31,18 @@ export default {
     created() {
         this.initMeta();
     },
+    mounted() {
+        window.checkLoginState = this.checkLoginState;
+    },
     methods: {
-        initMeta() {
-            window.FB.init({
+        async initMeta() {
+            await window.FB.init({
                 appId: "1085732649020412",
                 cookie: true,
                 xfbml: true,
                 version: "v14.0",
             });
             window.FB.AppEvents.logPageView();
-            window.checkLoginState = this.checkLoginState;
         },
         checkLoginState() {
             window.FB.getLoginStatus((response) => {
