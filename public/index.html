@@ -15,6 +15,8 @@
 	<script src="./javascript/enc-base64.js"></script>
 	<script src="./javascript/hmac.js"></script>
 	<script src="./javascript/sha256.js"></script>
+	
+	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v14.0&appId=1085732649020412&autoLogAppEvents=1" nonce="eZZC75KK"></script>
 </head>
 
 <body>
@@ -22,19 +24,6 @@
 		<strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
 				Please enable it to continue.</strong>
 	</noscript>
-	<script>
-		(function (d, s, id) {
-			var js,
-				fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) {
-				return;
-			}
-			js = d.createElement(s);
-			js.id = id;
-			js.src = "https://connect.facebook.net/zh_TW/sdk.js";
-			fjs.parentNode.insertBefore(js, fjs);
-		})(document, "script", "facebook-jssdk");
-	</script>
 	<div id="app"></div>
 	<!-- built files will be auto injected -->
 </body>

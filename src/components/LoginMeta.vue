@@ -11,9 +11,10 @@
             data-auto-logout-link="false"
             data-use-continue-as="true"
         ></div>
-        <div id="status"></div>
     </div>
 </template>
+
+
 
 <script>
 export default {
@@ -35,14 +36,15 @@ export default {
         window.checkLoginState = this.checkLoginState;
     },
     methods: {
-        async initMeta() {
-            await window.FB.init({
+        initMeta() {
+            window.FB.init({
                 appId: "1085732649020412",
+                autoLogAppEvents: true,
+                status: true,
                 cookie: true,
                 xfbml: true,
                 version: "v14.0",
             });
-            window.FB.AppEvents.logPageView();
         },
         checkLoginState() {
             window.FB.getLoginStatus((response) => {
