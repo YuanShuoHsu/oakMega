@@ -7,7 +7,7 @@
             leave-active-class="animate__fadeOut"
         >
             <div class="socialButtonGroup">
-                <img src="./../assets/oakMegaHome.png" alt="" />
+                <img src="./../assets/oakMegaHome.png" alt="oakMega" />
                 <LoginGoogle />
                 <LoginMeta />
             </div>
