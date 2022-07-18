@@ -155,7 +155,7 @@ const cityOption = {
                                 context.commit("PULLUPMESSAGE");
                                 context.commit("NONEMESSAGE");
                                 context.commit("NONEKEYWORD");
-                                context.commit("HAMBURGER");
+                                context.commit("HAMBURGERTRUE");
                                 context.commit("STOP");
                                 context.commit("STOPORIGIN");
                                 context.commit("STOPPULLUPLOAD");
@@ -453,8 +453,11 @@ const cityOption = {
         ANTIHAMBURGER(state, value) {
             state.hamburger = !value;
         },
-        HAMBURGER(state) {
+        HAMBURGERTRUE(state) {
             state.hamburger = true;
+        },
+        HAMBURGERFALSE(state) {
+            state.hamburger = false;
         },
         NONEKEYWORD(state) {
             state.keyWord = "";
